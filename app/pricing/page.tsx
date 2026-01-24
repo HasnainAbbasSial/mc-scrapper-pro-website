@@ -28,7 +28,7 @@ export default function PricingPage() {
                         "Basic Support"
                     ]}
                     buttonText="Get Started"
-                    href="/download"
+                    href="/contact"
                 />
 
                 {/* Yearly Plan */}
@@ -45,7 +45,7 @@ export default function PricingPage() {
                         "Advanced Filtering Options"
                     ]}
                     buttonText="Get Started"
-                    href="/download"
+                    href="/contact"
                 />
 
                 {/* Lifetime Plan */}

@@ -24,19 +24,19 @@ export default function DownloadPage() {
                     <DownloadButton
                         icon={<Cloud size={24} />}
                         name="Mega Drive"
-                        href="https://mega.nz/file/gh5RFB6b#h7Ok_hgjO2im5Bf8Y3Fn9Lc6hD93n3YwTUK6mFt3gNo"
+                        href="https://mega.nz/folder/54ZjzJrA#PqLvZBZ8tMMZLvIWXjPwMg"
                         color="text-red-400"
                     />
                     <DownloadButton
                         icon={<HardDrive size={24} />}
                         name="Google Drive"
-                        href="https://drive.google.com/file/d/1KpVg38Zat-7ZF4jug_ZrW5KAj4GpamU5/view?usp=drive_link"
+                        href="https://drive.google.com/drive/folders/12P7n0x5XDbs-5S4jYexhwEWl0gfPIxVk?usp=drive_link"
                         color="text-blue-400"
                     />
                     <DownloadButton
                         icon={<FileBox size={24} />}
                         name="MediaFire"
-                        href="https://www.mediafire.com/file/idfr3svi18tsffu/MC_Scrapper_Pro.exe/file"
+                        href="https://www.mediafire.com/folder/di5mgq9knj4uo/MC+Scrapper+Pro"
                         color="text-cyan-400"
                     />
                 </div>
