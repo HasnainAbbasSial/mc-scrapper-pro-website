@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Menu, X, Download, ShieldCheck } from "lucide-react";
+import { Menu, X, Download, Zap } from "lucide-react";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
 
@@ -23,7 +23,7 @@ export default function Navbar() {
             <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between mx-auto p-4">
                 <Link href="/" className="flex items-center space-x-3 rtl:space-x-reverse">
                     <div className="bg-primary/20 p-2 rounded-lg text-primary">
-                        <ShieldCheck size={28} />
+                        <Zap size={28} />
                     </div>
                     <span className="self-center text-xl font-bold whitespace-nowrap text-white font-sans tracking-tight">
                         MC Scrapper <span className="text-primary">Pro</span>
@@ -42,7 +42,7 @@ export default function Navbar() {
                         type="button"
                         className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-400 rounded-lg md:hidden hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-gray-600"
                         aria-controls="navbar-sticky"
-                        aria-expanded={isOpen ? "true" : "false"}
+                        aria-expanded={isOpen}
                     >
                         <span className="sr-only">Open main menu</span>
                         {isOpen ? <X size={24} /> : <Menu size={24} />}

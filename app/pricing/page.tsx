@@ -22,6 +22,7 @@ export default function PricingPage() {
                     period="/mo"
                     features={[
                         "Unlimited Scraping",
+                        "Safe Mode (0.5s Delay)",
                         "Real-time SaferWeb Data",
                         "Export to CSV/Excel",
                         "Multiple Search Filters",
@@ -39,6 +40,7 @@ export default function PricingPage() {
                     isPopular
                     features={[
                         "All Monthly Features",
+                        "Safe Mode Optimized",
                         "2 Months Extra Bonus Free",
                         "Priority Support",
                         "Early Access to Updates",

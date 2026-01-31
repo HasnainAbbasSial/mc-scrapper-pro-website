@@ -27,30 +27,31 @@ export default function Home() {
 
               <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold leading-tight">
                 <span className="bg-clip-text text-transparent bg-gradient-to-r from-white via-blue-100 to-white">
-                  Automate Your
+                  Stable & Secure
                 </span>
                 <br />
                 <span className="text-primary">Lead Generation</span>
               </h1>
 
               <p className="text-lg md:text-xl text-gray-400 leading-relaxed max-w-xl">
-                Extract carrier and broker data from SaferWeb & FMCSA in seconds.
-                Built for dispatchers and brokers who value their time.
+                Extract high-quality carrier and broker data from SaferWeb & FMCSA with our new
+                <span className="text-primary font-semibold"> Safe Scraping Mode</span>.
+                Built for professionals who prioritize data integrity.
               </p>
 
               {/* Key Benefits */}
               <div className="space-y-3">
                 <div className="flex items-center gap-3 text-gray-300">
                   <CheckCircle2 size={20} className="text-green-400 flex-shrink-0" />
-                  <span>Scrape thousands of MC numbers in minutes</span>
+                  <span>Verified Stability (0.5s Optimized Delay)</span>
                 </div>
                 <div className="flex items-center gap-3 text-gray-300">
                   <CheckCircle2 size={20} className="text-green-400 flex-shrink-0" />
-                  <span>Export to Excel/CSV with one click</span>
+                  <span>Dual-Threaded Processing for Consistent Results</span>
                 </div>
                 <div className="flex items-center gap-3 text-gray-300">
                   <CheckCircle2 size={20} className="text-green-400 flex-shrink-0" />
-                  <span>Real-time data from FMCSA database</span>
+                  <span>100% External Browser Auth for Data Safety</span>
                 </div>
               </div>
 
@@ -61,7 +62,7 @@ export default function Home() {
                   className="group px-8 py-4 bg-primary hover:bg-primary-hover text-white rounded-xl font-semibold text-lg flex items-center justify-center gap-2 transition-all shadow-lg shadow-primary/25 hover:shadow-primary/40 hover:scale-105"
                 >
                   <Download size={20} />
-                  Download Now
+                  Download V2.1.0
                   <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
                 </Link>
                 <Link
@@ -76,11 +77,11 @@ export default function Home() {
               <div className="pt-8 flex items-center gap-6 text-sm text-gray-500">
                 <div className="flex items-center gap-2">
                   <Shield size={16} className="text-green-400" />
-                  <span>Secure & Safe</span>
+                  <span>Enterprise Secure</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Zap size={16} className="text-yellow-400" />
-                  <span>Lightning Fast</span>
+                  <span>Optimized Speed</span>
                 </div>
               </div>
             </div>
@@ -106,15 +107,18 @@ export default function Home() {
 
                 {/* Floating Stats Cards */}
                 <div className="absolute -bottom-6 -left-6 glass-card p-4 rounded-xl border border-white/10 shadow-xl hidden lg:block animate-float">
-                  <div className="text-xs text-gray-400 mb-1">Speed</div>
-                  <div className="text-2xl font-bold text-primary">1000+</div>
-                  <div className="text-xs text-gray-500">Records/min</div>
+                  <div className="text-xs text-gray-400 mb-1">Status</div>
+                  <div className="text-lg font-bold text-emerald-500 flex items-center gap-1">
+                    <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+                    Connected
+                  </div>
+                  <div className="text-[10px] text-gray-500">Safe Scraping Mode</div>
                 </div>
 
                 <div className="absolute -top-6 -right-6 glass-card p-4 rounded-xl border border-white/10 shadow-xl hidden lg:block animate-float-delayed">
-                  <div className="text-xs text-gray-400 mb-1">Accuracy</div>
-                  <div className="text-2xl font-bold text-green-400">99.9%</div>
-                  <div className="text-xs text-gray-500">Success Rate</div>
+                  <div className="text-xs text-gray-400 mb-1">Threads</div>
+                  <div className="text-2xl font-bold text-primary">02</div>
+                  <div className="text-xs text-gray-500">Stable Limit</div>
                 </div>
               </div>
             </div>
@@ -127,28 +131,28 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-5xl font-bold mb-4">
-              Why Choose <span className="text-primary">MC Scrapper Pro</span>?
+              Built for <span className="text-primary">Reliability</span>
             </h2>
             <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-              Built specifically for the logistics industry to save time and increase booking rates.
+              We've optimized our engine to provide the perfect balance between speed and server respect.
             </p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
             <FeatureCard
               icon={<Zap className="text-yellow-400" size={28} />}
-              title="Blazing Fast Scraping"
-              desc="Scrap thousands of MC numbers in minutes using our optimized multi-threaded engine."
+              title="Safe Scraping Mode"
+              desc="Automatic 0.5s delay between requests avoids IP bans and ensures 99.9% data accuracy."
             />
             <FeatureCard
               icon={<Database className="text-blue-400" size={28} />}
-              title="Complete Data Points"
-              desc="Get Phone, Email, Address, USDOT, Legal Name, and Operating Status instantly."
+              title="Dual-Threaded Engine"
+              desc="Optimized for stable, non-blocking performance without overwhelming target servers."
             />
             <FeatureCard
               icon={<Shield className="text-green-400" size={28} />}
-              title="Safe & Secure"
-              desc="Built-in VPN compatibility and anti-detection mechanisms to keep your IP safe."
+              title="System Browser Auth"
+              desc="High-security login via Google Chrome or Edge. Your credentials never touch the app."
             />
             <FeatureCard
               icon={<BarChart3 className="text-purple-400" size={28} />}

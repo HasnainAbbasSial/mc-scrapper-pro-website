@@ -13,7 +13,7 @@ export default function DownloadPage() {
             <div className="w-full max-w-3xl glass-card p-10 rounded-3xl border border-white/10 text-center">
                 <div className="mb-8">
                     <span className="inline-block px-4 py-2 rounded-full bg-green-500/10 text-green-400 font-mono text-sm mb-4 border border-green-500/20">
-                        Latest Version: 2.0.1 (Stable)
+                        Latest Version: 2.1.0 (Safe Mode)
                     </span>
                     <p className="text-gray-400 text-sm">
                         Compatible with Windows 10/11 (64-bit)
@@ -46,6 +46,7 @@ export default function DownloadPage() {
                     <ol className="list-decimal pl-5 space-y-2">
                         <li>Download the installer from one of the mirrors above.</li>
                         <li>Run the setup file (you may need to allow it in Windows Defender).</li>
+                        <li>Stability Patch: V2.1.0 includes the latest 0.5s delay and 2-thread limit for maximum reliability.</li>
                         <li>Launch MC Scrapper Pro and enter your license key.</li>
                     </ol>
                 </div>
