@@ -42,7 +42,7 @@ export default function Navbar() {
                         type="button"
                         className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-400 rounded-lg md:hidden hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-gray-600"
                         aria-controls="navbar-sticky"
-                        aria-expanded={isOpen}
+                        aria-expanded={isOpen ? "true" : "false"}
                     >
                         <span className="sr-only">Open main menu</span>
                         {isOpen ? <X size={24} /> : <Menu size={24} />}

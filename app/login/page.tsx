@@ -31,8 +31,9 @@ export default function LoginPage() {
 
             // Try to send back to local app
             try {
-                await fetch('http://localhost:54321/callback', {
+                await fetch('http://127.0.0.1:54321/callback', {
                     method: 'POST',
+                    mode: 'cors',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email: user.email, token: token })
                 });
