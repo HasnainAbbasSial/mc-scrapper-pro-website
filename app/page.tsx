@@ -22,7 +22,7 @@ export default function Home() {
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
                 </span>
-                V2.0 Pro Edition Now Available
+                v3.0.0 Pro Edition Now Available
               </div>
 
               <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold leading-tight">
@@ -62,7 +62,7 @@ export default function Home() {
                   className="group px-8 py-4 bg-primary hover:bg-primary-hover text-white rounded-xl font-semibold text-lg flex items-center justify-center gap-2 transition-all shadow-lg shadow-primary/25 hover:shadow-primary/40 hover:scale-105"
                 >
                   <Download size={20} />
-                  Download V2.1.0
+                  Download v3.0.0
                   <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
                 </Link>
                 <Link
@@ -126,6 +126,30 @@ export default function Home() {
         </div>
       </section>
 
+      {/* What's New Section (v3.0.0) */}
+      <section className="py-20 bg-surface/50 relative border-t border-white/5">
+        <div className="container mx-auto px-4 max-w-5xl">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-5xl font-bold mb-4">
+              What&apos;s New in <span className="text-primary">v3.0.0</span>
+            </h2>
+            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+              We&apos;ve made MC Scrapper Pro more optimized, highly secure, and packed with new advanced controls.
+            </p>
+          </div>
+
+          <div className="space-y-6">
+            <UpdateItem title="Free Tier Introduced" desc="No more waiting for admin approval! Automatically sign in and start scraping immediately with our new 'Free' tier (100 daily scrapes and up to 4 bulk file imports per day)." />
+            <UpdateItem title="Advanced Field Selection" desc="Customize your data exports. Selectively choose to extract DBA Name, Power Units, Drivers, DUNS Number, MCS-150 Date & Mileage, Mailing Address, etc." />
+            <UpdateItem title="Smart OA Filters" desc="Filter scraped results with pinpoint accuracy based on Authority Type: Property, HHG, Both, Any Authorized, Not Authorized, Broker Property, or Broker HHG." />
+            <UpdateItem title="Entity Type Targeting" desc="Easily target your scrape by specific entity types (All, Carrier, or Broker)." />
+            <UpdateItem title="Enhanced Session Management" desc="Improved auto-login and session handling with dynamic 'Session Expired' popups for better user guidance when security tokens expire." />
+            <UpdateItem title="Human-like Delay System" desc="Added a smart, randomized cooldown engine to prevent temporary IP blocks and maximize scraping reliability." />
+            <UpdateItem title="Live Usage Tracker" desc="A dynamic progress bar in the dashboard to help free-tier users monitor their daily scrape limits in real-time." />
+          </div>
+        </div>
+      </section>
+
       {/* Features Section */}
       <section id="features" className="py-20 bg-surface/30 relative">
         <div className="container mx-auto px-4">
@@ -134,7 +158,7 @@ export default function Home() {
               Built for <span className="text-primary">Reliability</span>
             </h2>
             <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-              We've optimized our engine to provide the perfect balance between speed and server respect.
+              We&apos;ve optimized our engine to provide the perfect balance between speed and server respect.
             </p>
           </div>
 
@@ -191,7 +215,7 @@ export default function Home() {
             Download MC Scrapper Pro
             <ArrowRight size={20} />
           </Link>
-          <p className="text-sm text-gray-500 mt-6">Starting at just $7/month. No credit card required for trial.</p>
+          <p className="text-sm text-gray-500 mt-6">Starting at just $0/month. Free tier available instantly.</p>
         </div>
       </section>
     </div>
@@ -208,6 +232,20 @@ function FeatureCard({ icon, title, desc }: { icon: React.ReactNode, title: stri
       <p className="text-gray-400 leading-relaxed">
         {desc}
       </p>
+    </div>
+  );
+}
+
+function UpdateItem({ title, desc }: { title: string, desc: string }) {
+  return (
+    <div className="flex items-start gap-4 p-5 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors">
+      <div className="mt-1 flex-shrink-0 text-primary">
+        <CheckCircle2 size={24} />
+      </div>
+      <div>
+        <h4 className="text-lg font-bold text-white mb-1">{title}</h4>
+        <p className="text-gray-400 leading-relaxed">{desc}</p>
+      </div>
     </div>
   );
 }
