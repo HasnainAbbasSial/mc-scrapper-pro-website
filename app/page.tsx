@@ -25,7 +25,7 @@ export default function Home() {
                 v3.0.0 Pro Edition Now Available
               </div>
 
-              <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold leading-tight">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight">
                 <span className="bg-clip-text text-transparent bg-gradient-to-r from-white via-blue-100 to-white">
                   Stable & Secure
                 </span>
@@ -33,7 +33,7 @@ export default function Home() {
                 <span className="text-primary">Lead Generation</span>
               </h1>
 
-              <p className="text-lg md:text-xl text-gray-400 leading-relaxed max-w-xl">
+              <p className="text-base sm:text-lg md:text-xl text-gray-400 leading-relaxed max-w-xl">
                 Extract high-quality carrier and broker data from SaferWeb & FMCSA with our new
                 <span className="text-primary font-semibold"> Safe Scraping Mode</span>.
                 Built for professionals who prioritize data integrity.
@@ -43,23 +43,23 @@ export default function Home() {
               <div className="space-y-3">
                 <div className="flex items-center gap-3 text-gray-300">
                   <CheckCircle2 size={20} className="text-green-400 flex-shrink-0" />
-                  <span>Verified Stability (0.5s Optimized Delay)</span>
+                  <span className="text-sm sm:text-base">Human-like Random Delay (Prevents IP Blocks)</span>
                 </div>
                 <div className="flex items-center gap-3 text-gray-300">
                   <CheckCircle2 size={20} className="text-green-400 flex-shrink-0" />
-                  <span>Dual-Threaded Processing for Consistent Results</span>
+                  <span className="text-sm sm:text-base">Dual-Threaded Processing for Consistent Results</span>
                 </div>
                 <div className="flex items-center gap-3 text-gray-300">
                   <CheckCircle2 size={20} className="text-green-400 flex-shrink-0" />
-                  <span>100% External Browser Auth for Data Safety</span>
+                  <span className="text-sm sm:text-base">100% Secure Scraping (No Risk of IP Blocking)</span>
                 </div>
               </div>
 
               {/* CTA Buttons */}
-              <div className="flex flex-col sm:flex-row gap-4 pt-4">
+              <div className="flex flex-col sm:flex-row gap-3 pt-6 pb-8 lg:pb-0">
                 <Link
                   href="/download"
-                  className="group px-8 py-4 bg-primary hover:bg-primary-hover text-white rounded-xl font-semibold text-lg flex items-center justify-center gap-2 transition-all shadow-lg shadow-primary/25 hover:shadow-primary/40 hover:scale-105"
+                  className="group px-6 py-4 sm:px-8 bg-primary hover:bg-primary-hover text-white rounded-xl font-semibold text-base sm:text-lg flex items-center justify-center gap-2 transition-all shadow-lg shadow-primary/25 hover:shadow-primary/40 hover:scale-[1.02]"
                 >
                   <Download size={20} />
                   Download v3.0.0
@@ -67,7 +67,7 @@ export default function Home() {
                 </Link>
                 <Link
                   href="/pricing"
-                  className="px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/10 text-white rounded-xl font-semibold text-lg flex items-center justify-center gap-2 transition-all backdrop-blur-sm hover:border-primary/30"
+                  className="px-6 py-4 sm:px-8 bg-white/5 hover:bg-white/10 border border-white/10 text-white rounded-xl font-semibold text-base sm:text-lg flex items-center justify-center gap-2 transition-all backdrop-blur-sm hover:border-primary/30"
                 >
                   View Pricing
                 </Link>
@@ -127,18 +127,18 @@ export default function Home() {
       </section>
 
       {/* What's New Section (v3.0.0) */}
-      <section className="py-20 bg-surface/50 relative border-t border-white/5">
+      <section className="py-16 md:py-24 bg-surface/50 relative border-t border-white/5">
         <div className="container mx-auto px-4 max-w-5xl">
-          <div className="text-center mb-16">
+          <div className="text-center mb-12 md:mb-16">
             <h2 className="text-3xl md:text-5xl font-bold mb-4">
               What&apos;s New in <span className="text-primary">v3.0.0</span>
             </h2>
-            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+            <p className="text-gray-400 text-base md:text-lg max-w-2xl mx-auto">
               We&apos;ve made MC Scrapper Pro more optimized, highly secure, and packed with new advanced controls.
             </p>
           </div>
 
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             <UpdateItem title="Free Tier Introduced" desc="No more waiting for admin approval! Automatically sign in and start scraping immediately with our new 'Free' tier (100 daily scrapes and up to 4 bulk file imports per day)." />
             <UpdateItem title="Advanced Field Selection" desc="Customize your data exports. Selectively choose to extract DBA Name, Power Units, Drivers, DUNS Number, MCS-150 Date & Mileage, Mailing Address, etc." />
             <UpdateItem title="Smart OA Filters" desc="Filter scraped results with pinpoint accuracy based on Authority Type: Property, HHG, Both, Any Authorized, Not Authorized, Broker Property, or Broker HHG." />
@@ -151,22 +151,22 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-20 bg-surface/30 relative">
+      <section id="features" className="py-16 md:py-24 bg-surface/30 relative">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
+          <div className="text-center mb-12 md:mb-16">
             <h2 className="text-3xl md:text-5xl font-bold mb-4">
               Built for <span className="text-primary">Reliability</span>
             </h2>
-            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+            <p className="text-gray-400 text-base md:text-lg max-w-2xl mx-auto">
               We&apos;ve optimized our engine to provide the perfect balance between speed and server respect.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 max-w-7xl mx-auto">
             <FeatureCard
               icon={<Zap className="text-yellow-400" size={28} />}
               title="Safe Scraping Mode"
-              desc="Automatic 0.5s delay between requests avoids IP bans and ensures 99.9% data accuracy."
+              desc="Smart, human-like random delay engine fully protects your IP from bans while ensuring 99.9% data accuracy."
             />
             <FeatureCard
               icon={<Database className="text-blue-400" size={28} />}
@@ -224,12 +224,12 @@ export default function Home() {
 
 function FeatureCard({ icon, title, desc }: { icon: React.ReactNode, title: string, desc: string }) {
   return (
-    <div className="group p-6 rounded-2xl bg-white/5 border border-white/5 hover:border-primary/50 hover:bg-white/10 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10">
+    <div className="group p-5 sm:p-6 rounded-2xl bg-white/5 border border-white/5 hover:border-primary/50 hover:bg-white/10 transition-all duration-300 hover:shadow-xl hover:shadow-primary/10">
       <div className="mb-4 p-3 bg-white/5 rounded-lg inline-block w-fit group-hover:scale-110 transition-transform">
         {icon}
       </div>
-      <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors">{title}</h3>
-      <p className="text-gray-400 leading-relaxed">
+      <h3 className="text-lg sm:text-xl font-bold mb-2 group-hover:text-primary transition-colors">{title}</h3>
+      <p className="text-gray-400 text-sm sm:text-base leading-relaxed">
         {desc}
       </p>
     </div>
@@ -238,13 +238,13 @@ function FeatureCard({ icon, title, desc }: { icon: React.ReactNode, title: stri
 
 function UpdateItem({ title, desc }: { title: string, desc: string }) {
   return (
-    <div className="flex items-start gap-4 p-5 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors">
+    <div className="flex items-start gap-4 p-4 sm:p-5 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors">
       <div className="mt-1 flex-shrink-0 text-primary">
         <CheckCircle2 size={24} />
       </div>
       <div>
-        <h4 className="text-lg font-bold text-white mb-1">{title}</h4>
-        <p className="text-gray-400 leading-relaxed">{desc}</p>
+        <h4 className="text-base sm:text-lg font-bold text-white mb-1">{title}</h4>
+        <p className="text-gray-400 text-sm sm:text-base leading-relaxed">{desc}</p>
       </div>
     </div>
   );
