@@ -1,251 +1,300 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
-import { Download, Zap, Shield, Database, BarChart3, Clock, ArrowRight, CheckCircle2 } from "lucide-react";
+import { motion } from "framer-motion";
+import { Download, Zap, Shield, Database, BarChart3, Clock, ArrowRight, CheckCircle2, ChevronRight, Star, Activity, Server, Lock } from "lucide-react";
+
+const fadeIn = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
+};
+
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1
+    }
+  }
+};
 
 export default function Home() {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen overflow-hidden selection:bg-primary/30">
+      {/* Dynamic Background */}
+      <div className="fixed inset-0 -z-10 bg-[#0f172a]">
+        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary/20 rounded-full blur-[120px] mix-blend-screen opacity-50 animate-pulse"></div>
+        <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-violet-600/10 rounded-full blur-[150px] mix-blend-screen opacity-50 animate-pulse" style={{ animationDelay: '2s' }}></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-blue-500/5 rounded-full blur-[150px] mix-blend-screen opacity-50"></div>
+        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay"></div>
+      </div>
+
       {/* Hero Section */}
-      <section className="relative pt-32 pb-20 md:pt-40 md:pb-32 overflow-hidden">
-        {/* Animated Background Gradient */}
-        <div className="absolute inset-0 -z-10">
-          <div className="absolute top-20 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-[120px] animate-pulse"></div>
-          <div className="absolute top-40 right-1/4 w-96 h-96 bg-violet-500/10 rounded-full blur-[100px] animate-pulse delay-1000"></div>
-        </div>
-
+      <section className="relative pt-32 pb-20 md:pt-48 md:pb-32">
         <div className="container mx-auto px-4">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            {/* Left Column - Text Content */}
-            <div className="space-y-8 mb-12 lg:mb-0">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass text-sm font-medium text-primary border border-primary/20">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            
+            {/* Text Content */}
+            <motion.div 
+              initial="hidden"
+              animate="visible"
+              variants={staggerContainer}
+              className="space-y-8 relative z-10"
+            >
+              <motion.div variants={fadeIn} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-md shadow-[0_0_15px_rgba(99,102,241,0.2)]">
                 <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
                 </span>
-                v3.0.0 Pro Edition Now Available
-              </div>
+                <span className="text-sm font-medium text-slate-200">v3.1.0 Update Live — Free Tier Introduced</span>
+              </motion.div>
 
-              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight">
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-white via-blue-100 to-white">
-                  Stable & Secure
-                </span>
+              <motion.h1 variants={fadeIn} className="text-5xl sm:text-6xl md:text-7xl font-extrabold leading-[1.1] tracking-tight">
+                <span className="text-white">Next-Gen</span>
                 <br />
-                <span className="text-primary">Lead Generation</span>
-              </h1>
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-violet-400 to-blue-400 drop-shadow-sm">
+                  Lead Generation
+                </span>
+              </motion.h1>
 
-              <p className="text-base sm:text-lg md:text-xl text-gray-400 leading-relaxed max-w-xl">
-                Extract high-quality carrier and broker data from SaferWeb & FMCSA with our new
-                <span className="text-primary font-semibold"> Safe Scraping Mode</span>.
-                Built for professionals who prioritize data integrity.
-              </p>
+              <motion.p variants={fadeIn} className="text-lg md:text-xl text-slate-400 leading-relaxed max-w-xl">
+                Extract high-quality <span className="text-slate-200 font-medium">Carrier & Broker data</span> from FMCSA with zero IP blocks. Experience the industry's most reliable and undetectable scraping engine.
+              </motion.p>
 
-              {/* Key Benefits */}
-              <div className="space-y-3">
-                <div className="flex items-center gap-3 text-gray-300">
-                  <CheckCircle2 size={20} className="text-green-400 flex-shrink-0" />
-                  <span className="text-sm sm:text-base">Human-like Random Delay (Prevents IP Blocks)</span>
-                </div>
-                <div className="flex items-center gap-3 text-gray-300">
-                  <CheckCircle2 size={20} className="text-green-400 flex-shrink-0" />
-                  <span className="text-sm sm:text-base">Dual-Threaded Processing for Consistent Results</span>
-                </div>
-                <div className="flex items-center gap-3 text-gray-300">
-                  <CheckCircle2 size={20} className="text-green-400 flex-shrink-0" />
-                  <span className="text-sm sm:text-base">100% Secure Scraping (No Risk of IP Blocking)</span>
-                </div>
-              </div>
-
-              {/* CTA Buttons */}
-              <div className="flex flex-col sm:flex-row gap-3 pt-6 pb-8 lg:pb-0">
-                <Link
-                  href="/download"
-                  className="group px-6 py-4 sm:px-8 bg-primary hover:bg-primary-hover text-white rounded-xl font-semibold text-base sm:text-lg flex items-center justify-center gap-2 transition-all shadow-lg shadow-primary/25 hover:shadow-primary/40 hover:scale-[1.02]"
-                >
-                  <Download size={20} />
-                  Download v3.0.0
-                  <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+              <motion.div variants={fadeIn} className="flex flex-col sm:flex-row gap-4 pt-4">
+                <Link href="/login" className="group relative inline-flex items-center justify-center gap-2 px-8 py-4 bg-primary text-white font-semibold rounded-xl overflow-hidden shadow-[0_0_30px_rgba(99,102,241,0.4)] hover:shadow-[0_0_40px_rgba(99,102,241,0.6)] transition-all duration-300 transform hover:-translate-y-1">
+                  <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-in-out"></div>
+                  <span className="relative">Start For Free</span>
+                  <ArrowRight size={20} className="relative group-hover:translate-x-1 transition-transform" />
                 </Link>
-                <Link
-                  href="/pricing"
-                  className="px-6 py-4 sm:px-8 bg-white/5 hover:bg-white/10 border border-white/10 text-white rounded-xl font-semibold text-base sm:text-lg flex items-center justify-center gap-2 transition-all backdrop-blur-sm hover:border-primary/30"
-                >
-                  View Pricing
+                <Link href="https://mcscrap.eptasky.com/download" className="group inline-flex items-center justify-center gap-2 px-8 py-4 bg-white/5 hover:bg-white/10 text-white font-semibold rounded-xl border border-white/10 backdrop-blur-md transition-all duration-300">
+                  <Download size={20} className="text-slate-400 group-hover:text-white transition-colors" />
+                  Download Software
                 </Link>
-              </div>
+              </motion.div>
 
-              {/* Trust Badge */}
-              <div className="pt-8 flex items-center gap-6 text-sm text-gray-500">
-                <div className="flex items-center gap-2">
-                  <Shield size={16} className="text-green-400" />
-                  <span>Enterprise Secure</span>
+              <motion.div variants={fadeIn} className="flex items-center gap-6 pt-6 border-t border-white/10">
+                <div className="flex -space-x-3">
+                  {[1,2,3,4].map(i => (
+                    <div key={i} className={`w-10 h-10 rounded-full border-2 border-[#0f172a] bg-gradient-to-br from-slate-700 to-slate-800 flex items-center justify-center shadow-lg z-${10-i}`}>
+                      <Star size={14} className="text-yellow-500" />
+                    </div>
+                  ))}
                 </div>
-                <div className="flex items-center gap-2">
-                  <Zap size={16} className="text-yellow-400" />
-                  <span>Optimized Speed</span>
+                <div className="text-sm">
+                  <div className="text-white font-bold">Trusted by 500+</div>
+                  <div className="text-slate-400">Logistics Professionals</div>
                 </div>
-              </div>
-            </div>
+              </motion.div>
+            </motion.div>
 
-            {/* Right Column - Dashboard Preview */}
-            <div className="relative lg:block">
-              <div className="relative group">
-                {/* Glow Effect */}
-                <div className="absolute -inset-1 bg-gradient-to-r from-primary via-violet-500 to-primary rounded-3xl blur-2xl opacity-20 group-hover:opacity-30 transition-opacity"></div>
-
-                {/* Main Image Container */}
-                <div className="relative rounded-2xl border border-white/10 overflow-hidden glass-card shadow-2xl">
-                  <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent z-10 pointer-events-none"></div>
-                  <Image
-                    src="/dashboard-main.png"
-                    alt="MC Scrapper Pro Dashboard Interface"
-                    width={1920}
-                    height={1080}
-                    className="w-full h-auto transform transition-transform duration-700 group-hover:scale-105"
-                    priority
-                  />
+            {/* Right Column - Dashboard Mockup */}
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9, rotateY: 15 }}
+              animate={{ opacity: 1, scale: 1, rotateY: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              className="relative lg:h-[600px] hidden lg:flex items-center justify-center perspective-1000"
+            >
+              <div className="relative w-full max-w-lg aspect-square rounded-full bg-gradient-to-tr from-primary/20 to-violet-500/20 blur-3xl absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 animate-pulse"></div>
+              
+              {/* Main App Mockup */}
+              <div className="relative w-full z-20 rounded-2xl border border-white/10 bg-[#1e293b]/80 backdrop-blur-xl shadow-2xl overflow-hidden transform hover:-translate-y-2 transition-transform duration-500">
+                {/* Mac Window Controls */}
+                <div className="flex items-center gap-2 px-4 py-3 border-b border-white/10 bg-white/5">
+                  <div className="w-3 h-3 rounded-full bg-rose-500"></div>
+                  <div className="w-3 h-3 rounded-full bg-amber-500"></div>
+                  <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                  <div className="ml-4 text-xs font-medium text-slate-400">MC Scrapper Pro v3.1</div>
                 </div>
-
-                {/* Floating Stats Cards */}
-                <div className="absolute -bottom-6 -left-6 glass-card p-4 rounded-xl border border-white/10 shadow-xl hidden lg:block animate-float">
-                  <div className="text-xs text-gray-400 mb-1">Status</div>
-                  <div className="text-lg font-bold text-emerald-500 flex items-center gap-1">
-                    <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
-                    Connected
+                {/* Mockup Content */}
+                <div className="p-6">
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="flex gap-4">
+                      <div className="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center border border-primary/30 text-primary">
+                        <Activity size={24} />
+                      </div>
+                      <div>
+                        <div className="text-2xl font-bold text-white">4,289</div>
+                        <div className="text-xs text-slate-400 font-medium">Scraped Today</div>
+                      </div>
+                    </div>
+                    <div className="px-3 py-1 rounded-full bg-green-500/10 border border-green-500/20 text-green-400 text-xs font-bold">
+                      System Online
+                    </div>
                   </div>
-                  <div className="text-[10px] text-gray-500">Safe Scraping Mode</div>
-                </div>
-
-                <div className="absolute -top-6 -right-6 glass-card p-4 rounded-xl border border-white/10 shadow-xl hidden lg:block animate-float-delayed">
-                  <div className="text-xs text-gray-400 mb-1">Threads</div>
-                  <div className="text-2xl font-bold text-primary">02</div>
-                  <div className="text-xs text-gray-500">Stable Limit</div>
+                  
+                  <div className="space-y-3">
+                    {[1, 2, 3].map((i) => (
+                      <div key={i} className="flex items-center justify-between p-3 rounded-lg bg-white/5 border border-white/5">
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded bg-slate-800 flex items-center justify-center text-xs font-mono text-slate-400">MC</div>
+                          <div className="w-24 h-2 rounded bg-slate-700"></div>
+                        </div>
+                        <div className="w-16 h-2 rounded bg-green-500/30"></div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="mt-6 h-32 rounded-xl bg-gradient-to-t from-primary/10 to-transparent border border-primary/20 relative overflow-hidden">
+                    <svg className="absolute bottom-0 w-full h-full" preserveAspectRatio="none" viewBox="0 0 100 100">
+                      <path d="M0,100 L0,50 Q25,30 50,60 T100,40 L100,100 Z" fill="rgba(99,102,241,0.2)" />
+                      <path d="M0,100 L0,70 Q25,50 50,80 T100,60 L100,100 Z" fill="rgba(99,102,241,0.4)" />
+                    </svg>
+                  </div>
                 </div>
               </div>
-            </div>
+
+              {/* Floating Elements */}
+              <motion.div 
+                animate={{ y: [-10, 10, -10] }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute -right-8 top-20 z-30 p-4 rounded-xl bg-slate-800/90 backdrop-blur-md border border-white/10 shadow-xl"
+              >
+                <div className="flex items-center gap-3">
+                  <Shield className="text-green-400" size={24} />
+                  <div>
+                    <div className="text-sm font-bold text-white">Anti-Ban Active</div>
+                    <div className="text-xs text-slate-400">Human emulation</div>
+                  </div>
+                </div>
+              </motion.div>
+
+              <motion.div 
+                animate={{ y: [10, -10, 10] }}
+                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute -left-12 bottom-32 z-30 p-4 rounded-xl bg-slate-800/90 backdrop-blur-md border border-white/10 shadow-xl"
+              >
+                <div className="flex items-center gap-3">
+                  <Zap className="text-amber-400" size={24} />
+                  <div>
+                    <div className="text-sm font-bold text-white">Dual-Threaded</div>
+                    <div className="text-xs text-slate-400">Ultra fast speed</div>
+                  </div>
+                </div>
+              </motion.div>
+            </motion.div>
           </div>
         </div>
       </section>
 
-      {/* What's New Section (v3.0.0) */}
-      <section className="py-16 md:py-24 bg-surface/50 relative border-t border-white/5">
-        <div className="container mx-auto px-4 max-w-5xl">
-          <div className="text-center mb-12 md:mb-16">
-            <h2 className="text-3xl md:text-5xl font-bold mb-4">
-              What&apos;s New in <span className="text-primary">v3.0.0</span>
-            </h2>
-            <p className="text-gray-400 text-base md:text-lg max-w-2xl mx-auto">
-              We&apos;ve made MC Scrapper Pro more optimized, highly secure, and packed with new advanced controls.
-            </p>
-          </div>
-
-          <div className="space-y-4 sm:space-y-6">
-            <UpdateItem title="Free Tier Introduced" desc="No more waiting for admin approval! Automatically sign in and start scraping immediately with our new 'Free' tier (100 daily scrapes and up to 4 bulk file imports per day)." />
-            <UpdateItem title="Advanced Field Selection" desc="Customize your data exports. Selectively choose to extract DBA Name, Power Units, Drivers, DUNS Number, MCS-150 Date & Mileage, Mailing Address, etc." />
-            <UpdateItem title="Smart OA Filters" desc="Filter scraped results with pinpoint accuracy based on Authority Type: Property, HHG, Both, Any Authorized, Not Authorized, Broker Property, or Broker HHG." />
-            <UpdateItem title="Entity Type Targeting" desc="Easily target your scrape by specific entity types (All, Carrier, or Broker)." />
-            <UpdateItem title="Enhanced Session Management" desc="Improved auto-login and session handling with dynamic 'Session Expired' popups for better user guidance when security tokens expire." />
-            <UpdateItem title="Human-like Delay System" desc="Added a smart, randomized cooldown engine to prevent temporary IP blocks and maximize scraping reliability." />
-            <UpdateItem title="Live Usage Tracker" desc="A dynamic progress bar in the dashboard to help free-tier users monitor their daily scrape limits in real-time." />
-          </div>
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section id="features" className="py-16 md:py-24 bg-surface/30 relative">
+      {/* Features Grid */}
+      <section className="py-24 relative z-10 border-t border-white/5 bg-[#0f172a]/50 backdrop-blur-lg">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12 md:mb-16">
-            <h2 className="text-3xl md:text-5xl font-bold mb-4">
-              Built for <span className="text-primary">Reliability</span>
-            </h2>
-            <p className="text-gray-400 text-base md:text-lg max-w-2xl mx-auto">
-              We&apos;ve optimized our engine to provide the perfect balance between speed and server respect.
-            </p>
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">Engineered for <span className="text-primary">Excellence</span></h2>
+            <p className="text-slate-400 text-lg">Stop worrying about captchas and IP blocks. Our intelligent engine handles the heavy lifting so you can focus on closing deals.</p>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 max-w-7xl mx-auto">
-            <FeatureCard
-              icon={<Zap className="text-yellow-400" size={28} />}
-              title="Safe Scraping Mode"
-              desc="Smart, human-like random delay engine fully protects your IP from bans while ensuring 99.9% data accuracy."
-            />
-            <FeatureCard
-              icon={<Database className="text-blue-400" size={28} />}
-              title="Dual-Threaded Engine"
-              desc="Optimized for stable, non-blocking performance without overwhelming target servers."
-            />
-            <FeatureCard
-              icon={<Shield className="text-green-400" size={28} />}
-              title="System Browser Auth"
-              desc="High-security login via Google Chrome or Edge. Your credentials never touch the app."
-            />
-            <FeatureCard
-              icon={<BarChart3 className="text-purple-400" size={28} />}
-              title="Export to Excel/CSV"
-              desc="One-click export to organized Excel or CSV files ready for your CRM or dialer."
-            />
-            <FeatureCard
-              icon={<Clock className="text-red-400" size={28} />}
-              title="Real-Time Updates"
-              desc="Fetch the most recent data from FMCSA. No stale leads, only fresh opportunities."
-            />
-            <FeatureCard
-              icon={<Zap className="text-cyan-400" size={28} />}
-              title="User Friendly"
-              desc="Modern, dark-themed UI that is easy on the eyes and simple to navigate."
-            />
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[
+              { icon: Shield, title: "Safe Scraping Mode", desc: "Advanced human-emulation algorithms to bypass sophisticated bot detection.", color: "text-green-400", bg: "bg-green-400/10", border: "group-hover:border-green-400/50" },
+              { icon: Zap, title: "Dual-Thread Engine", desc: "Process multiple records simultaneously without triggering rate limits.", color: "text-amber-400", bg: "bg-amber-400/10", border: "group-hover:border-amber-400/50" },
+              { icon: Database, title: "Smart Data Sorting", desc: "Filter by Entity, Power Units, USDOT, and 10+ other vital data points.", color: "text-blue-400", bg: "bg-blue-400/10", border: "group-hover:border-blue-400/50" },
+              { icon: Server, title: "Cloud Synchronization", desc: "Your limits, history, and active devices sync instantly across the cloud.", color: "text-violet-400", bg: "bg-violet-400/10", border: "group-hover:border-violet-400/50" },
+              { icon: Activity, title: "Live Usage Tracking", desc: "Monitor your scraping capacity in real-time straight from your dashboard.", color: "text-rose-400", bg: "bg-rose-400/10", border: "group-hover:border-rose-400/50" },
+              { icon: Lock, title: "Secure Authentication", desc: "Enterprise-grade security powered by Supabase with remote device wipe.", color: "text-teal-400", bg: "bg-teal-400/10", border: "group-hover:border-teal-400/50" }
+            ].map((f, i) => (
+              <motion.div 
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className={`group relative p-8 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm transition-all duration-300 hover:bg-white/10 hover:-translate-y-1 hover:shadow-2xl ${f.border}`}
+              >
+                <div className={`w-14 h-14 rounded-xl ${f.bg} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
+                  <f.icon className={f.color} size={28} />
+                </div>
+                <h3 className="text-xl font-bold text-white mb-3">{f.title}</h3>
+                <p className="text-slate-400 leading-relaxed">{f.desc}</p>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-violet-500/10"></div>
-        <div className="container mx-auto px-4 text-center relative z-10">
-          <h2 className="text-3xl md:text-5xl font-bold mb-6">
-            Ready to Supercharge Your Lead Generation?
-          </h2>
-          <p className="text-xl text-gray-400 mb-8 max-w-2xl mx-auto">
-            Join hundreds of dispatchers and brokers who are already saving hours every day.
-          </p>
-          <Link
-            href="/download"
-            className="inline-flex items-center gap-2 px-10 py-5 bg-primary hover:bg-primary-hover text-white rounded-xl font-bold text-lg transition-all shadow-lg shadow-primary/25 hover:shadow-primary/40 hover:scale-105"
-          >
-            <Download size={22} />
-            Download MC Scrapper Pro
-            <ArrowRight size={20} />
-          </Link>
-          <p className="text-sm text-gray-500 mt-6">Starting at just $0/month. Free tier available instantly.</p>
+      {/* Pricing Section */}
+      <section className="py-24 relative z-10">
+        <div className="container mx-auto px-4">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">Simple, Transparent <span className="text-primary">Pricing</span></h2>
+            <p className="text-slate-400 text-lg">Start for free, upgrade when you need limitless power.</p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            {/* Free Tier */}
+            <motion.div 
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="relative p-8 rounded-3xl bg-slate-800/50 border border-white/10 backdrop-blur-md flex flex-col"
+            >
+              <div className="mb-8">
+                <div className="text-xl font-bold text-slate-300 mb-2">Hobbyist</div>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-5xl font-extrabold text-white">$0</span>
+                  <span className="text-slate-400 font-medium">/forever</span>
+                </div>
+                <p className="mt-4 text-slate-400 text-sm">Perfect for testing and small batches.</p>
+              </div>
+              <ul className="space-y-4 mb-8 flex-1">
+                {['100 Scrapes per day', 'Standard Speed', 'Basic Filtering', 'Community Support'].map((feature, i) => (
+                  <li key={i} className="flex items-center gap-3 text-slate-300">
+                    <CheckCircle2 size={18} className="text-slate-500" />
+                    <span>{feature}</span>
+                  </li>
+                ))}
+              </ul>
+              <Link href="/login" className="block w-full py-4 px-6 text-center rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold transition-colors">
+                Get Started
+              </Link>
+            </motion.div>
+
+            {/* Premium Tier */}
+            <motion.div 
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="relative p-8 rounded-3xl bg-gradient-to-b from-primary/20 to-slate-800/80 border border-primary/50 backdrop-blur-md flex flex-col transform md:-translate-y-4 shadow-[0_0_40px_rgba(99,102,241,0.2)]"
+            >
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 px-4 py-1 bg-gradient-to-r from-primary to-violet-500 rounded-full text-xs font-bold text-white shadow-lg">
+                MOST POPULAR
+              </div>
+              <div className="mb-8">
+                <div className="text-xl font-bold text-primary mb-2">Professional</div>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-5xl font-extrabold text-white">$49</span>
+                  <span className="text-slate-400 font-medium">/month</span>
+                </div>
+                <p className="mt-4 text-slate-300 text-sm">Limitless power for power users.</p>
+              </div>
+              <ul className="space-y-4 mb-8 flex-1">
+                {['Unlimited Daily Scrapes', 'Dual-Threaded Max Speed', 'Advanced Data Filters', 'Priority 24/7 Support', 'Multiple Device Sync'].map((feature, i) => (
+                  <li key={i} className="flex items-center gap-3 text-slate-200 font-medium">
+                    <CheckCircle2 size={18} className="text-primary" />
+                    <span>{feature}</span>
+                  </li>
+                ))}
+              </ul>
+              <Link href="/login" className="block w-full py-4 px-6 text-center rounded-xl bg-primary hover:bg-primary-hover text-white font-semibold shadow-lg shadow-primary/30 transition-all hover:-translate-y-1">
+                Upgrade to Pro
+              </Link>
+            </motion.div>
+          </div>
         </div>
       </section>
-    </div>
-  );
-}
 
-function FeatureCard({ icon, title, desc }: { icon: React.ReactNode, title: string, desc: string }) {
-  return (
-    <div className="group p-5 sm:p-6 rounded-2xl bg-white/5 border border-white/5 hover:border-primary/50 hover:bg-white/10 transition-all duration-300 hover:shadow-xl hover:shadow-primary/10">
-      <div className="mb-4 p-3 bg-white/5 rounded-lg inline-block w-fit group-hover:scale-110 transition-transform">
-        {icon}
-      </div>
-      <h3 className="text-lg sm:text-xl font-bold mb-2 group-hover:text-primary transition-colors">{title}</h3>
-      <p className="text-gray-400 text-sm sm:text-base leading-relaxed">
-        {desc}
-      </p>
-    </div>
-  );
-}
-
-function UpdateItem({ title, desc }: { title: string, desc: string }) {
-  return (
-    <div className="flex items-start gap-4 p-4 sm:p-5 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors">
-      <div className="mt-1 flex-shrink-0 text-primary">
-        <CheckCircle2 size={24} />
-      </div>
-      <div>
-        <h4 className="text-base sm:text-lg font-bold text-white mb-1">{title}</h4>
-        <p className="text-gray-400 text-sm sm:text-base leading-relaxed">{desc}</p>
-      </div>
+      {/* Footer */}
+      <footer className="py-8 border-t border-white/5 mt-auto relative z-10 bg-[#0f172a]">
+        <div className="container mx-auto px-4 text-center text-slate-500 text-sm">
+          <p>© 2026 MC Scrapper Pro. All rights reserved.</p>
+          <div className="flex items-center justify-center gap-4 mt-4">
+            <Link href="#" className="hover:text-white transition-colors">Terms of Service</Link>
+            <Link href="#" className="hover:text-white transition-colors">Privacy Policy</Link>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
