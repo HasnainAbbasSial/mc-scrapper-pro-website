@@ -57,24 +57,14 @@ export default function AdminPage() {
     const fetchData = async () => {
         setIsLoading(true);
         try {
-            // Fetch all users
-            const { data: usersData, error: usersError } = await supabase
-                .from('shared_users')
-                .select('*')
-                .order('created_at', { ascending: false });
-                
-            if (!usersError && usersData) {
-                setUsers(usersData);
-            }
-
-            // Fetch MC Scrapper subscriptions
-            const { data: subsData, error: subsError } = await supabase
-                .from('shared_subscriptions')
-                .select('*')
-                .eq('app_id', 'mc_scrapper');
-
-            if (!subsError && subsData) {
-                setSubscriptions(subsData);
+            const res = await fetch('/api/admin/users');
+            const data = await res.json();
+            
+            if (data.success) {
+                setUsers(data.users || []);
+                setSubscriptions(data.subscriptions || []);
+            } else {
+                console.error("API Error:", data.error);
             }
         } catch (error) {
             console.error(error);
@@ -83,34 +73,44 @@ export default function AdminPage() {
         }
     };
 
-    const toggleSubscription = async (email: string, currentStatus: string) => {
-        setProcessingId(email);
+    const toggleSubscription = async (userEmail: string, currentStatus: string) => {
+        if (!userEmail) return;
+        setProcessingId(userEmail);
+        setIsLoading(true);
+
+        const isCurrentlyPremium = currentStatus.toLowerCase() === 'premium';
+        const newStatus = isCurrentlyPremium ? 'Free' : 'Premium';
+        
+        // Expiry 1 year from now for new Premium
+        let newExpiry = null;
+        if (!isCurrentlyPremium) {
+            const date = new Date();
+            date.setFullYear(date.getFullYear() + 1);
+            newExpiry = date.toISOString().split('T')[0];
+        }
+
         try {
-            if (currentStatus === 'Premium') {
-                // Revoke -> Update status to Free
-                await supabase
-                    .from('shared_subscriptions')
-                    .upsert({ email: email, app_id: 'mc_scrapper', status: 'Free' });
+            const res = await fetch('/api/admin/users', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    action: 'toggle_subscription',
+                    email: userEmail,
+                    status: newStatus,
+                    expiry: newExpiry
+                })
+            });
+            const data = await res.json();
+            if (data.success) {
+                await fetchData();
             } else {
-                // Grant -> Update status to Premium
-                const nextYear = new Date();
-                nextYear.setFullYear(nextYear.getFullYear() + 1);
-                
-                await supabase
-                    .from('shared_subscriptions')
-                    .upsert({ 
-                        email: email, 
-                        app_id: 'mc_scrapper', 
-                        status: 'Premium', 
-                        expiry: nextYear.toISOString() 
-                    });
+                alert("Failed to update: " + data.error);
             }
-            // Refresh data
-            await fetchData();
         } catch (error) {
-            console.error("Failed to toggle subscription", error);
-            alert("Failed to update subscription. Make sure RLS is disabled or you have permissions.");
+            console.error("Action error:", error);
+            alert("An error occurred");
         } finally {
+            setIsLoading(false);
             setProcessingId(null);
         }
     };
