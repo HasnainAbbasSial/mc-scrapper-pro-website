@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import {
     ShieldCheck,
@@ -12,8 +12,12 @@ import {
     CheckCircle2,
     AlertCircle
 } from "lucide-react";
-import { auth, googleProvider } from "@/lib/firebase";
-import { signInWithPopup } from "firebase/auth";
+import { createClient } from "@supabase/supabase-js";
+
+// Initialize Supabase Client
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://dexiwfvgpknjrqoyrqsy.supabase.co";
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "sb_publishable_U6x3Rhe7p-YxidTGIPWl9w_CUQlKwpd";
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 export default function LoginPage() {
     const [showPassword, setShowPassword] = useState(false);
@@ -21,33 +25,76 @@ export default function LoginPage() {
     const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
     const [errorMessage, setErrorMessage] = useState("");
 
+    // Handle OAuth redirect back to the page
+    useEffect(() => {
+        const handleSession = async () => {
+            const { data: { session }, error } = await supabase.auth.getSession();
+            
+            if (session) {
+                setIsLoading(true);
+                const token = session.access_token;
+                const email = session.user.email;
+                let successCount = 0;
+                
+                // Try new port (51010)
+                try {
+                    await fetch('http://127.0.0.1:51010/callback', {
+                        method: 'POST',
+                        mode: 'cors',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email: email, token: token })
+                    });
+                    successCount++;
+                } catch(e) {}
+                
+                // Try old port (54321) for backward compatibility
+                try {
+                    await fetch('http://127.0.0.1:54321/callback', {
+                        method: 'POST',
+                        mode: 'cors',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email: email, token: token })
+                    });
+                    successCount++;
+                } catch(e) {}
+
+                if (successCount > 0) {
+                    setStatus("success");
+                } else {
+                    setStatus("error");
+                    setErrorMessage("Login successful, but could not connect to your MC Scrapper software. Please make sure the app is open.");
+                }
+                setIsLoading(false);
+            }
+        };
+        
+        handleSession();
+        
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+            if (event === 'SIGNED_IN' && session) {
+                 handleSession();
+            }
+        });
+        
+        return () => subscription.unsubscribe();
+    }, []);
+
     const handleGoogleLogin = async () => {
         setIsLoading(true);
         setStatus("idle");
         try {
-            const result = await signInWithPopup(auth, googleProvider);
-            const user = result.user;
-            const token = await user.getIdToken();
-
-            // Try to send back to local app
-            try {
-                await fetch('http://127.0.0.1:54321/callback', {
-                    method: 'POST',
-                    mode: 'cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email: user.email, token: token })
-                });
-                setStatus("success");
-            } catch (appError) {
-                console.warn("Could not reach local app server. Are you running MC Scrapper?", appError);
-                setStatus("error");
-                setErrorMessage("Login successful, but could not connect to your MC Scrapper software. Please make sure the app is open.");
-            }
+            const { error } = await supabase.auth.signInWithOAuth({
+                provider: 'google',
+                options: {
+                    redirectTo: window.location.origin + '/login'
+                }
+            });
+            if (error) throw error;
+            // Page will redirect to Google
         } catch (error: any) {
             console.error("Google Login Failed", error);
             setStatus("error");
             setErrorMessage(error.message || "Login failed. Please try again.");
-        } finally {
             setIsLoading(false);
         }
     };
