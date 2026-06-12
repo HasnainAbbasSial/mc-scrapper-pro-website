@@ -30,16 +30,16 @@ export default function AdminPage() {
                 return;
             }
 
-            const email = session.user.email;
+            const userId = session.user.id;
             
-            // Check role in shared_users
+            // Check admin status in Outreach Pro's profiles table
             const { data: userData, error: userError } = await supabase
-                .from('shared_users')
-                .select('role')
-                .eq('email', email)
+                .from('profiles')
+                .select('is_admin')
+                .eq('id', userId)
                 .single();
 
-            if (userError || !userData || userData.role !== 'admin') {
+            if (userError || !userData || userData.is_admin !== true) {
                 setIsAdmin(false);
                 setIsLoading(false);
                 return;
@@ -133,7 +133,7 @@ export default function AdminPage() {
                     <XCircle className="h-16 w-16 text-rose-500 mb-4" />
                     <h1 className="text-2xl font-bold mb-2 tracking-wider">Access Denied</h1>
                     <p className="text-slate-400 mb-6 text-sm">
-                        You do not have administrator privileges. Please make sure your 'role' is set to 'admin' in the database.
+                        You do not have administrator privileges. Please make sure your 'is_admin' is set to TRUE in the 'profiles' table.
                     </p>
                     <button 
                         onClick={() => router.push('/login')}
