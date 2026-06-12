@@ -5,7 +5,7 @@ export default function DownloadPage() {
     return (
         <div className="flex flex-col min-h-screen">
             {/* Hero Section */}
-            <section className="relative pt-32 pb-20 md:pt-40 md:pb-32 overflow-hidden">
+            <section className="relative pt-24 pb-8 md:pt-32 md:pb-12 overflow-hidden">
                 {/* Animated Background Gradient */}
                 <div className="absolute inset-0 -z-10">
                     <div className="absolute top-20 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-[120px] animate-pulse"></div>
