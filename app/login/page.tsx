@@ -8,9 +8,9 @@ import {
     Lock,
     Eye,
     EyeOff,
-    ArrowRight,
     CheckCircle2,
-    AlertCircle
+    AlertCircle,
+    RefreshCw
 } from "lucide-react";
 import { createClient } from "@supabase/supabase-js";
 
@@ -20,7 +20,11 @@ const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "sb_publishable
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 export default function LoginPage() {
+    const [authMode, setAuthMode] = useState<"signin" | "signup">("signin");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
+    
     const [isLoading, setIsLoading] = useState(false);
     const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
     const [errorMessage, setErrorMessage] = useState("");
@@ -32,39 +36,7 @@ export default function LoginPage() {
             
             if (session) {
                 setIsLoading(true);
-                const token = session.access_token;
-                const email = session.user.email;
-                let successCount = 0;
-                
-                // Try new port (51010)
-                try {
-                    await fetch('http://127.0.0.1:51010/callback', {
-                        method: 'POST',
-                        mode: 'cors',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ email: email, token: token })
-                    });
-                    successCount++;
-                } catch(e) {}
-                
-                // Try old port (54321) for backward compatibility
-                try {
-                    await fetch('http://127.0.0.1:54321/callback', {
-                        method: 'POST',
-                        mode: 'cors',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ email: email, token: token })
-                    });
-                    successCount++;
-                } catch(e) {}
-
-                if (successCount > 0) {
-                    setStatus("success");
-                } else {
-                    setStatus("error");
-                    setErrorMessage("Login successful, but could not connect to your MC Scrapper software. Please make sure the app is open.");
-                }
-                setIsLoading(false);
+                await broadcastSession(session);
             }
         };
         
@@ -79,6 +51,38 @@ export default function LoginPage() {
         return () => subscription.unsubscribe();
     }, []);
 
+    const broadcastSession = async (session: any) => {
+        const token = session.access_token;
+        const userEmail = session.user.email;
+        let successCount = 0;
+        
+        try {
+            await fetch('http://127.0.0.1:51010/callback', {
+                method: 'POST', mode: 'cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: userEmail, token: token })
+            });
+            successCount++;
+        } catch(e) {}
+        
+        try {
+            await fetch('http://127.0.0.1:54321/callback', {
+                method: 'POST', mode: 'cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: userEmail, token: token })
+            });
+            successCount++;
+        } catch(e) {}
+
+        if (successCount > 0) {
+            setStatus("success");
+        } else {
+            setStatus("error");
+            setErrorMessage("Login successful, but could not connect to your MC Scrapper software. Please make sure the app is open.");
+        }
+        setIsLoading(false);
+    };
+
     const handleGoogleLogin = async () => {
         setIsLoading(true);
         setStatus("idle");
@@ -90,7 +94,6 @@ export default function LoginPage() {
                 }
             });
             if (error) throw error;
-            // Page will redirect to Google
         } catch (error: any) {
             console.error("Google Login Failed", error);
             setStatus("error");
@@ -99,15 +102,46 @@ export default function LoginPage() {
         }
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setIsLoading(true);
-        // Traditional login disabled in favor of Google
-        setTimeout(() => {
-            setIsLoading(false);
+        
+        if (!email || !email.includes("@")) {
             setStatus("error");
-            setErrorMessage("Traditional email/password login is temporarily disabled. Please use Google Login.");
-        }, 1000);
+            setErrorMessage("Please enter a valid email address.");
+            return;
+        }
+        if (!password || password.length < 6) {
+            setStatus("error");
+            setErrorMessage("Password must be at least 6 characters.");
+            return;
+        }
+
+        setIsLoading(true);
+        setStatus("idle");
+
+        try {
+            if (authMode === "signin") {
+                const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+                if (error) throw error;
+                if (data.session) {
+                    await broadcastSession(data.session);
+                }
+            } else {
+                const { data, error } = await supabase.auth.signUp({ email, password });
+                if (error) throw error;
+                if (data.session) {
+                    await broadcastSession(data.session);
+                } else {
+                    setStatus("error");
+                    setErrorMessage("Account created! Please check your email to verify.");
+                    setIsLoading(false);
+                }
+            }
+        } catch (error: any) {
+            setStatus("error");
+            setErrorMessage(error.message || "Authentication failed. Please try again.");
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -129,18 +163,22 @@ export default function LoginPage() {
                             MC Scrapper <span className="text-primary">Pro</span>
                         </span>
                     </Link>
-                    <h1 className="text-2xl font-bold text-white">Welcome Back</h1>
-                    <p className="text-gray-400 mt-2">Sign in to sync your MC Scrapper Pro license</p>
+                    <h1 className="text-2xl font-bold text-white">
+                        {authMode === "signin" ? "Welcome Back" : "Create Account"}
+                    </h1>
+                    <p className="text-gray-400 mt-2">
+                        {authMode === "signin" ? "Sign in to sync your MC Scrapper Pro license" : "Sign up to get your MC Scrapper Pro license"}
+                    </p>
                 </div>
 
                 {/* Login Form */}
-                <div className="glass-card p-8 rounded-2xl border border-white/10 shadow-2xl relative">
+                <div className="glass-card p-8 rounded-2xl border border-white/10 shadow-2xl relative bg-slate-900/50 backdrop-blur-xl">
                     {status === "success" ? (
                         <div className="text-center space-y-4 py-4 animate-in fade-in zoom-in duration-300">
                             <div className="w-16 h-16 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto text-emerald-500">
                                 <CheckCircle2 size={32} />
                             </div>
-                            <h2 className="text-xl font-bold text-white">Login Successful!</h2>
+                            <h2 className="text-xl font-bold text-white">Authentication Successful!</h2>
                             <p className="text-gray-400 text-sm">
                                 You have successfully authenticated. You can now close this window and return to your MC Scrapper software.
                             </p>
@@ -153,20 +191,14 @@ export default function LoginPage() {
                         </div>
                     ) : (
                         <div className="space-y-6">
-                            {/* Google Login Button (Primary) */}
+                            {/* Google Login Button */}
                             <button
                                 onClick={handleGoogleLogin}
                                 disabled={isLoading}
-                                className="w-full bg-white hover:bg-gray-100 text-gray-900 py-3.5 rounded-xl font-bold text-lg flex items-center justify-center gap-3 transition-all shadow-lg active:scale-[0.98] disabled:opacity-50 group"
+                                className="w-full bg-white hover:bg-gray-100 text-gray-900 py-3.5 rounded-xl font-bold text-lg flex items-center justify-center gap-3 transition-all shadow-lg active:scale-[0.98] disabled:opacity-50"
                             >
-                                {isLoading ? (
-                                    <div className="w-6 h-6 border-2 border-gray-300 border-t-primary rounded-full animate-spin"></div>
-                                ) : (
-                                    <>
-                                        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" className="w-5 h-5" alt="Google" />
-                                        Continue with Google
-                                    </>
-                                )}
+                                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" className="w-5 h-5" alt="Google" />
+                                Continue with Google
                             </button>
 
                             <div className="relative">
@@ -174,7 +206,7 @@ export default function LoginPage() {
                                     <div className="w-full border-t border-white/10"></div>
                                 </div>
                                 <div className="relative flex justify-center text-xs uppercase">
-                                    <span className="bg-[#0f172a] px-2 text-gray-500">Or use email</span>
+                                    <span className="bg-slate-900/80 px-2 text-gray-400">Or use email</span>
                                 </div>
                             </div>
 
@@ -185,9 +217,9 @@ export default function LoginPage() {
                                 </div>
                             )}
 
-                            <form className="space-y-6 opacity-60 pointer-events-none" onSubmit={handleSubmit}>
+                            <form className="space-y-4" onSubmit={handleSubmit}>
                                 {/* Email Field */}
-                                <div className="space-y-2">
+                                <div className="space-y-1.5">
                                     <label className="text-sm font-medium text-gray-300 ml-1">Email Address</label>
                                     <div className="relative group">
                                         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500">
@@ -195,15 +227,17 @@ export default function LoginPage() {
                                         </div>
                                         <input
                                             type="email"
-                                            disabled
+                                            required
+                                            value={email}
+                                            onChange={(e) => setEmail(e.target.value)}
                                             placeholder="name@example.com"
-                                            className="w-full bg-white/5 border border-white/10 text-white pl-11 pr-4 py-3 rounded-xl focus:outline-none placeholder:text-gray-600"
+                                            className="w-full bg-white/5 border border-white/10 text-white pl-11 pr-4 py-3 rounded-xl focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 placeholder:text-gray-600 transition-all"
                                         />
                                     </div>
                                 </div>
 
                                 {/* Password Field */}
-                                <div className="space-y-2">
+                                <div className="space-y-1.5">
                                     <div className="flex justify-between items-center ml-1">
                                         <label className="text-sm font-medium text-gray-300">Password</label>
                                     </div>
@@ -212,32 +246,56 @@ export default function LoginPage() {
                                             <Lock size={18} />
                                         </div>
                                         <input
-                                            type="password"
-                                            disabled
+                                            type={showPassword ? "text" : "password"}
+                                            required
+                                            value={password}
+                                            onChange={(e) => setPassword(e.target.value)}
                                             placeholder="••••••••"
-                                            className="w-full bg-white/5 border border-white/10 text-white pl-11 pr-12 py-3 rounded-xl focus:outline-none placeholder:text-gray-600"
+                                            className="w-full bg-white/5 border border-white/10 text-white pl-11 pr-12 py-3 rounded-xl focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 placeholder:text-gray-600 transition-all"
                                         />
+                                        <button 
+                                            type="button" 
+                                            onClick={() => setShowPassword(!showPassword)}
+                                            className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-500 hover:text-gray-300 transition-colors"
+                                        >
+                                            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                        </button>
                                     </div>
                                 </div>
 
                                 <button
                                     type="submit"
-                                    disabled
-                                    className="w-full bg-white/5 border border-white/10 text-gray-500 py-3.5 rounded-xl font-bold"
+                                    disabled={isLoading}
+                                    className="w-full bg-primary hover:bg-primary/90 text-white py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 transition-all shadow-[0_0_20px_rgba(var(--primary),0.3)] disabled:opacity-50 mt-2"
                                 >
-                                    Login with Email
+                                    {isLoading ? (
+                                        <RefreshCw className="h-5 w-5 animate-spin" />
+                                    ) : (
+                                        authMode === "signin" ? "Sign In" : "Create Account"
+                                    )}
                                 </button>
                             </form>
+
+                            {/* Toggle Auth Mode */}
+                            <div className="text-center text-sm text-gray-400 mt-4">
+                                {authMode === "signin" ? (
+                                    <span>
+                                        Don&apos;t have an account?{" "}
+                                        <button onClick={() => setAuthMode("signup")} className="text-primary font-semibold hover:underline">
+                                            Sign Up
+                                        </button>
+                                    </span>
+                                ) : (
+                                    <span>
+                                        Already have an account?{" "}
+                                        <button onClick={() => setAuthMode("signin")} className="text-primary font-semibold hover:underline">
+                                            Sign In
+                                        </button>
+                                    </span>
+                                )}
+                            </div>
                         </div>
                     )}
-
-                    {/* Sign Up Link */}
-                    <div className="mt-8 text-center text-sm text-gray-400">
-                        Don&apos;t have an account?{" "}
-                        <Link href="/pricing" className="text-primary font-semibold hover:underline">
-                            View Pricing
-                        </Link>
-                    </div>
                 </div>
 
                 {/* Support Info */}
