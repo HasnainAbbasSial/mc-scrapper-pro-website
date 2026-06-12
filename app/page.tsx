@@ -214,76 +214,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Pricing Section */}
-      <section className="py-24 relative z-10">
-        <div className="container mx-auto px-4">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">Simple, Transparent <span className="text-primary">Pricing</span></h2>
-            <p className="text-slate-400 text-lg">Start for free, upgrade when you need limitless power.</p>
-          </div>
 
-          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            {/* Free Tier */}
-            <motion.div 
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              className="relative p-8 rounded-3xl bg-slate-800/50 border border-white/10 backdrop-blur-md flex flex-col"
-            >
-              <div className="mb-8">
-                <div className="text-xl font-bold text-slate-300 mb-2">Hobbyist</div>
-                <div className="flex items-baseline gap-2">
-                  <span className="text-5xl font-extrabold text-white">$0</span>
-                  <span className="text-slate-400 font-medium">/forever</span>
-                </div>
-                <p className="mt-4 text-slate-400 text-sm">Perfect for testing and small batches.</p>
-              </div>
-              <ul className="space-y-4 mb-8 flex-1">
-                {['100 Scrapes per day', 'Standard Speed', 'Basic Filtering', 'Community Support'].map((feature, i) => (
-                  <li key={i} className="flex items-center gap-3 text-slate-300">
-                    <CheckCircle2 size={18} className="text-slate-500" />
-                    <span>{feature}</span>
-                  </li>
-                ))}
-              </ul>
-              <Link href="/login" className="block w-full py-4 px-6 text-center rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold transition-colors">
-                Get Started
-              </Link>
-            </motion.div>
-
-            {/* Premium Tier */}
-            <motion.div 
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              className="relative p-8 rounded-3xl bg-gradient-to-b from-primary/20 to-slate-800/80 border border-primary/50 backdrop-blur-md flex flex-col transform md:-translate-y-4 shadow-[0_0_40px_rgba(99,102,241,0.2)]"
-            >
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 px-4 py-1 bg-gradient-to-r from-primary to-violet-500 rounded-full text-xs font-bold text-white shadow-lg">
-                MOST POPULAR
-              </div>
-              <div className="mb-8">
-                <div className="text-xl font-bold text-primary mb-2">Professional</div>
-                <div className="flex items-baseline gap-2">
-                  <span className="text-5xl font-extrabold text-white">$49</span>
-                  <span className="text-slate-400 font-medium">/month</span>
-                </div>
-                <p className="mt-4 text-slate-300 text-sm">Limitless power for power users.</p>
-              </div>
-              <ul className="space-y-4 mb-8 flex-1">
-                {['Unlimited Daily Scrapes', 'Dual-Threaded Max Speed', 'Advanced Data Filters', 'Priority 24/7 Support', 'Multiple Device Sync'].map((feature, i) => (
-                  <li key={i} className="flex items-center gap-3 text-slate-200 font-medium">
-                    <CheckCircle2 size={18} className="text-primary" />
-                    <span>{feature}</span>
-                  </li>
-                ))}
-              </ul>
-              <Link href="/login" className="block w-full py-4 px-6 text-center rounded-xl bg-primary hover:bg-primary-hover text-white font-semibold shadow-lg shadow-primary/30 transition-all hover:-translate-y-1">
-                Upgrade to Pro
-              </Link>
-            </motion.div>
-          </div>
-        </div>
-      </section>
 
       {/* Footer */}
       <footer className="py-8 border-t border-white/5 mt-auto relative z-10 bg-[#0f172a]">
