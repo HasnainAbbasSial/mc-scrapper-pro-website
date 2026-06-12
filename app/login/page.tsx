@@ -13,6 +13,8 @@ import {
     RefreshCw
 } from "lucide-react";
 import { createClient } from "@supabase/supabase-js";
+import { auth, googleProvider } from "@/lib/firebase";
+import { signInWithPopup } from "firebase/auth";
 
 // Initialize Supabase Client
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://dexiwfvgpknjrqoyrqsy.supabase.co";
@@ -30,14 +32,10 @@ export default function LoginPage() {
     const [status, setStatus] = useState<"idle" | "success" | "error" | "info">("idle");
     const [message, setMessage] = useState("");
 
-    // Handle OAuth redirect back to the page and Password Recovery
+    // Handle Password Recovery Mode trigger from Supabase
     useEffect(() => {
         const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-            // Only auto-login if there's a hash in the URL (which means it's an OAuth redirect)
-            if (event === 'SIGNED_IN' && session && window.location.hash.includes('access_token')) {
-                 setIsLoading(true);
-                 broadcastSession(session);
-            } else if (event === "PASSWORD_RECOVERY") {
+            if (event === "PASSWORD_RECOVERY") {
                  setAuthMode("reset");
             }
         });
@@ -45,10 +43,10 @@ export default function LoginPage() {
         return () => subscription.unsubscribe();
     }, []);
 
-    const broadcastSession = async (session: any) => {
+    // Broadcast Supabase session to NEW APP (Port 51010)
+    const broadcastSupabaseSession = async (session: any) => {
         const token = session.access_token;
         const userEmail = session.user.email;
-        let successCount = 0;
         
         try {
             await fetch('http://127.0.0.1:51010/callback', {
@@ -56,43 +54,42 @@ export default function LoginPage() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email: userEmail, token: token })
             });
-            successCount++;
-        } catch(e) {}
-        
-        try {
-            await fetch('http://127.0.0.1:54321/callback', {
-                method: 'POST', mode: 'cors',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email: userEmail, token: token })
-            });
-            successCount++;
-        } catch(e) {}
-
-        if (successCount > 0) {
             setStatus("success");
-            setMessage("Login successful!");
-        } else {
+            setMessage("Login successful for the New Version!");
+        } catch(e) {
             setStatus("error");
-            setMessage("Login successful, but could not connect to your MC Scrapper software. Please make sure the app is open.");
+            setMessage("Login successful, but could not connect to the New MC Scrapper software. Please make sure the app is open.");
         }
         setIsLoading(false);
     };
 
+    // Google Login handles OLD APP via Firebase (Port 54321)
     const handleGoogleLogin = async () => {
         setIsLoading(true);
         setStatus("idle");
         try {
-            const { error } = await supabase.auth.signInWithOAuth({
-                provider: 'google',
-                options: {
-                    redirectTo: window.location.origin + '/login'
-                }
-            });
-            if (error) throw error;
+            const result = await signInWithPopup(auth, googleProvider);
+            const user = result.user;
+            const token = await user.getIdToken();
+
+            try {
+                await fetch('http://127.0.0.1:54321/callback', {
+                    method: 'POST', mode: 'cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: user.email, token: token })
+                });
+                setStatus("success");
+                setMessage("Login successful for the Old Version!");
+            } catch (appError) {
+                console.warn("Could not reach old app server", appError);
+                setStatus("error");
+                setMessage("Login successful, but could not connect to your Old MC Scrapper software.");
+            }
         } catch (error: any) {
             console.error("Google Login Failed", error);
             setStatus("error");
-            setMessage(error.message || "Login failed. Please try again.");
+            setMessage(error.message || "Google Login failed. Please try again.");
+        } finally {
             setIsLoading(false);
         }
     };
@@ -154,7 +151,7 @@ export default function LoginPage() {
             return;
         }
 
-        // 3. Sign In / Sign Up Mode
+        // 3. Sign In / Sign Up Mode (Supabase)
         if (!email || !email.includes("@")) {
             setStatus("error");
             setMessage("Please enter a valid email address.");
@@ -179,13 +176,13 @@ export default function LoginPage() {
                 const { data, error } = await supabase.auth.signInWithPassword({ email, password });
                 if (error) throw error;
                 if (data.session) {
-                    await broadcastSession(data.session);
+                    await broadcastSupabaseSession(data.session);
                 }
             } else {
                 const { data, error } = await supabase.auth.signUp({ email, password });
                 if (error) throw error;
                 if (data.session) {
-                    await broadcastSession(data.session);
+                    await broadcastSupabaseSession(data.session);
                 } else {
                     setStatus("info");
                     setMessage("Account created! Please check your email to verify.");
@@ -241,7 +238,7 @@ export default function LoginPage() {
                             </div>
                             <h2 className="text-xl font-bold text-white">Authentication Successful!</h2>
                             <p className="text-gray-400 text-sm">
-                                You have successfully authenticated. You can now close this window and return to your MC Scrapper software.
+                                {message} You can now close this window and return to your MC Scrapper software.
                             </p>
                             <button
                                 onClick={() => window.close()}
@@ -252,7 +249,7 @@ export default function LoginPage() {
                         </div>
                     ) : (
                         <div className="space-y-6">
-                            {/* Google Login Button */}
+                            {/* Google Login Button (Old Version via Firebase) */}
                             {authMode !== "reset" && authMode !== "forgot" && (
                                 <>
                                     <button
@@ -261,7 +258,7 @@ export default function LoginPage() {
                                         className="w-full bg-white hover:bg-gray-100 text-gray-900 py-3.5 rounded-xl font-bold text-lg flex items-center justify-center gap-3 transition-all shadow-lg active:scale-[0.98] disabled:opacity-50"
                                     >
                                         <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" className="w-5 h-5" alt="Google" />
-                                        Continue with Google
+                                        Old Version (Google Login)
                                     </button>
 
                                     <div className="relative">
@@ -269,7 +266,7 @@ export default function LoginPage() {
                                             <div className="w-full border-t border-white/10"></div>
                                         </div>
                                         <div className="relative flex justify-center text-xs uppercase">
-                                            <span className="bg-slate-900/80 px-2 text-gray-400">Or use email</span>
+                                            <span className="bg-slate-900/80 px-2 text-gray-400">New Version (Email/Password)</span>
                                         </div>
                                     </div>
                                 </>
