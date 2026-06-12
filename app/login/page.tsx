@@ -176,12 +176,14 @@ export default function LoginPage() {
                 const { data, error } = await supabase.auth.signInWithPassword({ email, password });
                 if (error) throw error;
                 if (data.session) {
+                    await supabase.from('shared_users').upsert({ email: data.session.user.email, id: data.session.user.id });
                     await broadcastSupabaseSession(data.session);
                 }
             } else {
                 const { data, error } = await supabase.auth.signUp({ email, password });
                 if (error) throw error;
                 if (data.session) {
+                    await supabase.from('shared_users').upsert({ email: data.session.user.email, id: data.session.user.id });
                     await broadcastSupabaseSession(data.session);
                 } else {
                     setStatus("info");
