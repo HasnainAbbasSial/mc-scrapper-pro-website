@@ -527,8 +527,7 @@ export default function AdminDashboard() {
                     type="date" 
                     value={editExpiryDate}
                     onChange={(e) => setEditExpiryDate(e.target.value)}
-                    className="w-full bg-slate-950 border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-primary"
-                    style={{ colorScheme: 'dark' }}
+                    className="w-full bg-slate-900 border border-white/10 rounded-lg px-4 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-primary"
                   />
                   <span className="text-[10px] text-slate-500">Clear the date to remove expiry.</span>
                 </div>
