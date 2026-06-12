@@ -20,16 +20,17 @@ const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "sb_publishable
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 export default function LoginPage() {
-    const [authMode, setAuthMode] = useState<"signin" | "signup">("signin");
+    const [authMode, setAuthMode] = useState<"signin" | "signup" | "forgot" | "reset">("signin");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     
     const [isLoading, setIsLoading] = useState(false);
-    const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
-    const [errorMessage, setErrorMessage] = useState("");
+    const [status, setStatus] = useState<"idle" | "success" | "error" | "info">("idle");
+    const [message, setMessage] = useState("");
 
-    // Handle OAuth redirect back to the page
+    // Handle OAuth redirect back to the page and Password Recovery
     useEffect(() => {
         const handleSession = async () => {
             const { data: { session }, error } = await supabase.auth.getSession();
@@ -45,6 +46,8 @@ export default function LoginPage() {
         const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
             if (event === 'SIGNED_IN' && session) {
                  handleSession();
+            } else if (event === "PASSWORD_RECOVERY") {
+                 setAuthMode("reset");
             }
         });
         
@@ -76,9 +79,10 @@ export default function LoginPage() {
 
         if (successCount > 0) {
             setStatus("success");
+            setMessage("Login successful!");
         } else {
             setStatus("error");
-            setErrorMessage("Login successful, but could not connect to your MC Scrapper software. Please make sure the app is open.");
+            setMessage("Login successful, but could not connect to your MC Scrapper software. Please make sure the app is open.");
         }
         setIsLoading(false);
     };
@@ -97,7 +101,7 @@ export default function LoginPage() {
         } catch (error: any) {
             console.error("Google Login Failed", error);
             setStatus("error");
-            setErrorMessage(error.message || "Login failed. Please try again.");
+            setMessage(error.message || "Login failed. Please try again.");
             setIsLoading(false);
         }
     };
@@ -105,14 +109,74 @@ export default function LoginPage() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         
+        // 1. Forgot Password Mode
+        if (authMode === "forgot") {
+            if (!email || !email.includes("@")) {
+                setStatus("error");
+                setMessage("Please enter a valid email address.");
+                return;
+            }
+            setIsLoading(true);
+            try {
+                const { error } = await supabase.auth.resetPasswordForEmail(email, {
+                    redirectTo: window.location.origin + '/login'
+                });
+                if (error) throw error;
+                setStatus("info");
+                setMessage(`Password reset link sent to ${email}. Please check your inbox.`);
+            } catch (error: any) {
+                setStatus("error");
+                setMessage(error.message || "Failed to send reset link.");
+            } finally {
+                setIsLoading(false);
+            }
+            return;
+        }
+
+        // 2. Reset Password Mode
+        if (authMode === "reset") {
+            if (!password || password.length < 6) {
+                setStatus("error");
+                setMessage("Password must be at least 6 characters.");
+                return;
+            }
+            if (password !== confirmPassword) {
+                setStatus("error");
+                setMessage("Passwords do not match.");
+                return;
+            }
+            setIsLoading(true);
+            try {
+                const { error } = await supabase.auth.updateUser({ password });
+                if (error) throw error;
+                setStatus("info");
+                setMessage("Password updated successfully! You can now sign in.");
+                setAuthMode("signin");
+                setPassword("");
+                setConfirmPassword("");
+            } catch (error: any) {
+                setStatus("error");
+                setMessage(error.message || "Failed to update password.");
+            } finally {
+                setIsLoading(false);
+            }
+            return;
+        }
+
+        // 3. Sign In / Sign Up Mode
         if (!email || !email.includes("@")) {
             setStatus("error");
-            setErrorMessage("Please enter a valid email address.");
+            setMessage("Please enter a valid email address.");
             return;
         }
         if (!password || password.length < 6) {
             setStatus("error");
-            setErrorMessage("Password must be at least 6 characters.");
+            setMessage("Password must be at least 6 characters.");
+            return;
+        }
+        if (authMode === "signup" && password !== confirmPassword) {
+            setStatus("error");
+            setMessage("Passwords do not match.");
             return;
         }
 
@@ -132,14 +196,14 @@ export default function LoginPage() {
                 if (data.session) {
                     await broadcastSession(data.session);
                 } else {
-                    setStatus("error");
-                    setErrorMessage("Account created! Please check your email to verify.");
+                    setStatus("info");
+                    setMessage("Account created! Please check your email to verify.");
                     setIsLoading(false);
                 }
             }
         } catch (error: any) {
             setStatus("error");
-            setErrorMessage(error.message || "Authentication failed. Please try again.");
+            setMessage(error.message || "Authentication failed. Please try again.");
             setIsLoading(false);
         }
     };
@@ -164,10 +228,16 @@ export default function LoginPage() {
                         </span>
                     </Link>
                     <h1 className="text-2xl font-bold text-white">
-                        {authMode === "signin" ? "Welcome Back" : "Create Account"}
+                        {authMode === "signin" && "Welcome Back"}
+                        {authMode === "signup" && "Create Account"}
+                        {authMode === "forgot" && "Reset Password"}
+                        {authMode === "reset" && "Create New Password"}
                     </h1>
                     <p className="text-gray-400 mt-2">
-                        {authMode === "signin" ? "Sign in to sync your MC Scrapper Pro license" : "Sign up to get your MC Scrapper Pro license"}
+                        {authMode === "signin" && "Sign in to sync your MC Scrapper Pro license"}
+                        {authMode === "signup" && "Sign up to get your MC Scrapper Pro license"}
+                        {authMode === "forgot" && "Enter your email to receive a reset link"}
+                        {authMode === "reset" && "Enter a new secure password for your account"}
                     </p>
                 </div>
 
@@ -192,76 +262,122 @@ export default function LoginPage() {
                     ) : (
                         <div className="space-y-6">
                             {/* Google Login Button */}
-                            <button
-                                onClick={handleGoogleLogin}
-                                disabled={isLoading}
-                                className="w-full bg-white hover:bg-gray-100 text-gray-900 py-3.5 rounded-xl font-bold text-lg flex items-center justify-center gap-3 transition-all shadow-lg active:scale-[0.98] disabled:opacity-50"
-                            >
-                                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" className="w-5 h-5" alt="Google" />
-                                Continue with Google
-                            </button>
+                            {authMode !== "reset" && authMode !== "forgot" && (
+                                <>
+                                    <button
+                                        onClick={handleGoogleLogin}
+                                        disabled={isLoading}
+                                        className="w-full bg-white hover:bg-gray-100 text-gray-900 py-3.5 rounded-xl font-bold text-lg flex items-center justify-center gap-3 transition-all shadow-lg active:scale-[0.98] disabled:opacity-50"
+                                    >
+                                        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" className="w-5 h-5" alt="Google" />
+                                        Continue with Google
+                                    </button>
 
-                            <div className="relative">
-                                <div className="absolute inset-0 flex items-center">
-                                    <div className="w-full border-t border-white/10"></div>
-                                </div>
-                                <div className="relative flex justify-center text-xs uppercase">
-                                    <span className="bg-slate-900/80 px-2 text-gray-400">Or use email</span>
-                                </div>
-                            </div>
+                                    <div className="relative">
+                                        <div className="absolute inset-0 flex items-center">
+                                            <div className="w-full border-t border-white/10"></div>
+                                        </div>
+                                        <div className="relative flex justify-center text-xs uppercase">
+                                            <span className="bg-slate-900/80 px-2 text-gray-400">Or use email</span>
+                                        </div>
+                                    </div>
+                                </>
+                            )}
 
                             {status === "error" && (
                                 <div className="bg-rose-500/10 border border-rose-500/20 text-rose-500 text-xs p-3 rounded-lg flex gap-2 items-start">
                                     <AlertCircle size={14} className="flex-shrink-0 mt-0.5" />
-                                    <span>{errorMessage}</span>
+                                    <span>{message}</span>
+                                </div>
+                            )}
+
+                            {status === "info" && (
+                                <div className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs p-3 rounded-lg flex gap-2 items-start">
+                                    <CheckCircle2 size={14} className="flex-shrink-0 mt-0.5" />
+                                    <span>{message}</span>
                                 </div>
                             )}
 
                             <form className="space-y-4" onSubmit={handleSubmit}>
                                 {/* Email Field */}
-                                <div className="space-y-1.5">
-                                    <label className="text-sm font-medium text-gray-300 ml-1">Email Address</label>
-                                    <div className="relative group">
-                                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500">
-                                            <Mail size={18} />
+                                {authMode !== "reset" && (
+                                    <div className="space-y-1.5">
+                                        <label className="text-sm font-medium text-gray-300 ml-1">Email Address</label>
+                                        <div className="relative group">
+                                            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500">
+                                                <Mail size={18} />
+                                            </div>
+                                            <input
+                                                type="email"
+                                                required
+                                                value={email}
+                                                onChange={(e) => setEmail(e.target.value)}
+                                                placeholder="name@example.com"
+                                                className="w-full bg-white/5 border border-white/10 text-white pl-11 pr-4 py-3 rounded-xl focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 placeholder:text-gray-600 transition-all"
+                                            />
                                         </div>
-                                        <input
-                                            type="email"
-                                            required
-                                            value={email}
-                                            onChange={(e) => setEmail(e.target.value)}
-                                            placeholder="name@example.com"
-                                            className="w-full bg-white/5 border border-white/10 text-white pl-11 pr-4 py-3 rounded-xl focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 placeholder:text-gray-600 transition-all"
-                                        />
                                     </div>
-                                </div>
+                                )}
 
                                 {/* Password Field */}
-                                <div className="space-y-1.5">
-                                    <div className="flex justify-between items-center ml-1">
-                                        <label className="text-sm font-medium text-gray-300">Password</label>
-                                    </div>
-                                    <div className="relative group">
-                                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500">
-                                            <Lock size={18} />
+                                {authMode !== "forgot" && (
+                                    <div className="space-y-1.5">
+                                        <div className="flex justify-between items-center ml-1">
+                                            <label className="text-sm font-medium text-gray-300">
+                                                {authMode === "reset" ? "New Password" : "Password"}
+                                            </label>
+                                            {authMode === "signin" && (
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setAuthMode("forgot")}
+                                                    className="text-xs text-primary hover:underline"
+                                                >
+                                                    Forgot Password?
+                                                </button>
+                                            )}
                                         </div>
-                                        <input
-                                            type={showPassword ? "text" : "password"}
-                                            required
-                                            value={password}
-                                            onChange={(e) => setPassword(e.target.value)}
-                                            placeholder="••••••••"
-                                            className="w-full bg-white/5 border border-white/10 text-white pl-11 pr-12 py-3 rounded-xl focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 placeholder:text-gray-600 transition-all"
-                                        />
-                                        <button 
-                                            type="button" 
-                                            onClick={() => setShowPassword(!showPassword)}
-                                            className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-500 hover:text-gray-300 transition-colors"
-                                        >
-                                            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                                        </button>
+                                        <div className="relative group">
+                                            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500">
+                                                <Lock size={18} />
+                                            </div>
+                                            <input
+                                                type={showPassword ? "text" : "password"}
+                                                required
+                                                value={password}
+                                                onChange={(e) => setPassword(e.target.value)}
+                                                placeholder="••••••••"
+                                                className="w-full bg-white/5 border border-white/10 text-white pl-11 pr-12 py-3 rounded-xl focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 placeholder:text-gray-600 transition-all"
+                                            />
+                                            <button 
+                                                type="button" 
+                                                onClick={() => setShowPassword(!showPassword)}
+                                                className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-500 hover:text-gray-300 transition-colors"
+                                            >
+                                                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                            </button>
+                                        </div>
                                     </div>
-                                </div>
+                                )}
+
+                                {/* Confirm Password Field */}
+                                {(authMode === "signup" || authMode === "reset") && (
+                                    <div className="space-y-1.5">
+                                        <label className="text-sm font-medium text-gray-300 ml-1">Confirm Password</label>
+                                        <div className="relative group">
+                                            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500">
+                                                <Lock size={18} />
+                                            </div>
+                                            <input
+                                                type={showPassword ? "text" : "password"}
+                                                required
+                                                value={confirmPassword}
+                                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                                placeholder="••••••••"
+                                                className="w-full bg-white/5 border border-white/10 text-white pl-11 pr-12 py-3 rounded-xl focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 placeholder:text-gray-600 transition-all"
+                                            />
+                                        </div>
+                                    </div>
+                                )}
 
                                 <button
                                     type="submit"
@@ -271,27 +387,36 @@ export default function LoginPage() {
                                     {isLoading ? (
                                         <RefreshCw className="h-5 w-5 animate-spin" />
                                     ) : (
-                                        authMode === "signin" ? "Sign In" : "Create Account"
+                                        authMode === "signin" ? "Sign In" : 
+                                        authMode === "signup" ? "Create Account" :
+                                        authMode === "forgot" ? "Send Reset Link" :
+                                        "Update Password"
                                     )}
                                 </button>
                             </form>
 
                             {/* Toggle Auth Mode */}
                             <div className="text-center text-sm text-gray-400 mt-4">
-                                {authMode === "signin" ? (
+                                {authMode === "signin" && (
                                     <span>
                                         Don&apos;t have an account?{" "}
                                         <button onClick={() => setAuthMode("signup")} className="text-primary font-semibold hover:underline">
                                             Sign Up
                                         </button>
                                     </span>
-                                ) : (
+                                )}
+                                {authMode === "signup" && (
                                     <span>
                                         Already have an account?{" "}
                                         <button onClick={() => setAuthMode("signin")} className="text-primary font-semibold hover:underline">
                                             Sign In
                                         </button>
                                     </span>
+                                )}
+                                {(authMode === "forgot" || authMode === "reset") && (
+                                    <button onClick={() => setAuthMode("signin")} className="text-gray-400 hover:text-white transition-colors">
+                                        Back to Sign In
+                                    </button>
                                 )}
                             </div>
                         </div>
