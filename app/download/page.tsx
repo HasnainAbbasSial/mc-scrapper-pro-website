@@ -19,7 +19,7 @@ export default function DownloadPage() {
                                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
                                 <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
                             </span>
-                            v3.0.0 Pro Edition Released
+                            v4.0.2.14 Edition Released
                         </div>
 
                         <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold leading-tight">
@@ -36,7 +36,7 @@ export default function DownloadPage() {
                             </div>
                             <div className="flex items-center gap-2 text-sm text-gray-500">
                                 <Zap size={16} className="text-yellow-400" />
-                                <span>v3.0.0 Stability Patch</span>
+                                <span>v4.0.2.14 Stability Patch</span>
                             </div>
                         </div>
                     </div>
@@ -59,7 +59,7 @@ export default function DownloadPage() {
                                 </div>
                                 <div className="px-4 py-2 rounded-xl bg-white/5 border border-white/5 text-sm font-mono self-start md:self-center">
                                     <span className="text-gray-500">Latest Version: </span>
-                                    <span className="text-primary">3.0.0 (Recommended)</span>
+                                    <span className="text-primary">4.0.2.14 (Recommended)</span>
                                 </div>
                             </div>
 
@@ -92,7 +92,7 @@ export default function DownloadPage() {
                                     <div>
                                         <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
                                             <Zap size={20} className="text-primary" />
-                                            What&apos;s New in v3.0.0
+                                            What&apos;s New in v4.0.2.14
                                         </h3>
                                         <ul className="space-y-4">
                                             {[

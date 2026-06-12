@@ -23,13 +23,6 @@ const staggerContainer = {
 export default function Home() {
   return (
     <div className="flex flex-col min-h-screen overflow-hidden selection:bg-primary/30">
-      {/* Dynamic Background */}
-      <div className="fixed inset-0 -z-10 bg-[#0f172a]">
-        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary/20 rounded-full blur-[120px] mix-blend-screen opacity-50 animate-pulse"></div>
-        <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-violet-600/10 rounded-full blur-[150px] mix-blend-screen opacity-50 animate-pulse" style={{ animationDelay: '2s' }}></div>
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-blue-500/5 rounded-full blur-[150px] mix-blend-screen opacity-50"></div>
-        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay"></div>
-      </div>
 
       {/* Hero Section */}
       <section className="relative pt-32 pb-20 md:pt-48 md:pb-32">
@@ -48,7 +41,7 @@ export default function Home() {
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
                 </span>
-                <span className="text-sm font-medium text-slate-200">v3.1.0 Update Live — Free Tier Introduced</span>
+                <span className="text-sm font-medium text-slate-200">Version 4 Edition Live — Free Tier Introduced</span>
               </motion.div>
 
               <motion.h1 variants={fadeIn} className="text-5xl sm:text-6xl md:text-7xl font-extrabold leading-[1.1] tracking-tight">
@@ -106,7 +99,7 @@ export default function Home() {
                   <div className="w-3 h-3 rounded-full bg-rose-500"></div>
                   <div className="w-3 h-3 rounded-full bg-amber-500"></div>
                   <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                  <div className="ml-4 text-xs font-medium text-slate-400">MC Scrapper Pro v3.1</div>
+                  <div className="ml-4 text-xs font-medium text-slate-400">MC Scrapper Pro v4</div>
                 </div>
                 {/* Mockup Content */}
                 <div className="p-6">
