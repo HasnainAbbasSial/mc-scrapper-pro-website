@@ -32,20 +32,11 @@ export default function LoginPage() {
 
     // Handle OAuth redirect back to the page and Password Recovery
     useEffect(() => {
-        const handleSession = async () => {
-            const { data: { session }, error } = await supabase.auth.getSession();
-            
-            if (session) {
-                setIsLoading(true);
-                await broadcastSession(session);
-            }
-        };
-        
-        handleSession();
-        
         const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-            if (event === 'SIGNED_IN' && session) {
-                 handleSession();
+            // Only auto-login if there's a hash in the URL (which means it's an OAuth redirect)
+            if (event === 'SIGNED_IN' && session && window.location.hash.includes('access_token')) {
+                 setIsLoading(true);
+                 broadcastSession(session);
             } else if (event === "PASSWORD_RECOVERY") {
                  setAuthMode("reset");
             }
